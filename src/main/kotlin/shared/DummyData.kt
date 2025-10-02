@@ -2,7 +2,6 @@ package com.boki.shared
 
 import com.boki.model.CafeMenu
 
-/*
 val menuList = listOf(
     CafeMenu(
         id = 1,
@@ -143,4 +142,4 @@ val menuList = listOf(
         category = CafeMenuCategory.DESSERT,
         image = "https://bucket-ogntr9.s3.ap-northeast-2.amazonaws.com/%EC%B9%B4%ED%8E%98%EB%A9%94%EB%89%B4/%E1%84%8E%E1%85%B5%E1%84%8C%E1%85%B3%E1%84%8F%E1%85%A6%E1%84%8B%E1%85%B5%E1%84%8F%E1%85%B3.jpg"
     ),
-)*/
+)
