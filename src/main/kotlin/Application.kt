@@ -1,5 +1,7 @@
 package com.boki
 
+import com.boki.config.configureRouting
+import com.boki.config.configureSerialization
 import io.ktor.server.application.*
 
 fun main(args: Array<String>) {
