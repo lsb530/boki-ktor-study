@@ -1,15 +1,16 @@
 package com.boki.config
 
+import com.boki.domain.model.CafeMenu
+import com.boki.domain.repository.CafeMenuRepository
 import com.boki.shared.CafeOrderStatus
 import com.boki.shared.dto.OrderDto
-import com.boki.shared.menuList
 import io.ktor.server.application.*
-import io.ktor.server.request.receive
+import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import java.time.LocalDateTime
 
-fun Application.configureRouting() {
+fun Application.configureRouting(cafeMenuRepository: CafeMenuRepository) {
     routing {
         get("/") {
             call.respondText("Hello World!")
@@ -17,13 +18,13 @@ fun Application.configureRouting() {
 
         route("/api") {
             get("/menus") {
-                val list = menuList
+                val list: List<CafeMenu> = cafeMenuRepository.findAll()
                 call.respond(list)
             }
 
             post("/orders") {
                 val request = call.receive<OrderDto.CreateRequest>()
-                val selectedMenu = menuList.first { it.id == request.menuId }
+                val selectedMenu = cafeMenuRepository.read(request.menuId)!!
                 val newOrder = OrderDto.DisplayResponse(
                     orderCode = "order-code1",
                     menuName = selectedMenu.name,
