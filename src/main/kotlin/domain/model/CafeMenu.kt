@@ -1,4 +1,4 @@
-package com.boki.model
+package com.boki.domain.model
 
 import com.boki.shared.CafeMenuCategory
 import kotlinx.serialization.Serializable

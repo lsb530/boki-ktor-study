@@ -1,6 +1,6 @@
 package com.boki.shared
 
-import com.boki.model.CafeMenu
+import com.boki.domain.model.CafeMenu
 
 val menuList = listOf(
     CafeMenu(
