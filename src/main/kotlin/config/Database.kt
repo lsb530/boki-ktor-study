@@ -3,6 +3,7 @@ package com.boki.config
 import com.boki.domain.CafeMenuTable
 import com.boki.domain.CafeOrderTable
 import com.boki.domain.CafeUserTable
+import com.boki.shared.dummyQueryList
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.server.application.*
@@ -27,6 +28,10 @@ private fun initData() {
             CafeMenuTable,
             CafeUserTable,
             CafeOrderTable,
+        )
+
+        execInBatch(
+            dummyQueryList
         )
     }
 }
