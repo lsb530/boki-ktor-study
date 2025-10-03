@@ -1,14 +1,34 @@
 package com.boki.config
 
+import com.boki.domain.CafeMenuTable
+import com.boki.domain.CafeOrderTable
+import com.boki.domain.CafeUserTable
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.server.application.*
 import org.h2.tools.Server
 import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.SchemaUtils
+import org.jetbrains.exposed.sql.StdOutSqlLogger
+import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Application.configureDatabase() {
     configureH2()
     connectDatabase()
+    initData()
+}
+
+private fun initData() {
+    transaction {
+        addLogger(StdOutSqlLogger)
+
+        SchemaUtils.create(
+            CafeMenuTable,
+            CafeUserTable,
+            CafeOrderTable,
+        )
+    }
 }
 
 private fun connectDatabase() {
