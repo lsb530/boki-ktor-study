@@ -1,10 +1,25 @@
 package com.boki.config
 
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
 import io.ktor.server.application.*
 import org.h2.tools.Server
+import org.jetbrains.exposed.sql.Database
 
 fun Application.configureDatabase() {
     configureH2()
+    connectDatabase()
+}
+
+private fun connectDatabase() {
+    val config = HikariConfig().apply {
+        jdbcUrl = "jdbc:h2:mem:cafedb"
+        driverClassName = "org.h2.Driver"
+        validate()
+    }
+
+    val dataSource = HikariDataSource(config)
+    Database.connect(dataSource)
 }
 
 
