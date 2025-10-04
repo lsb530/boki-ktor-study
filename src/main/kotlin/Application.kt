@@ -5,6 +5,7 @@ import com.boki.config.configureRouting
 import com.boki.config.configureSerialization
 import com.boki.domain.CafeMenuTable
 import com.boki.domain.repository.CafeMenuRepository
+import com.boki.service.MenuService
 import io.ktor.server.application.*
 
 fun main(args: Array<String>) {
@@ -16,5 +17,6 @@ fun Application.module() {
     configureDatabase()
 
     val cafeMenuRepository = CafeMenuRepository(CafeMenuTable)
-    configureRouting(cafeMenuRepository)
+    val menuService = MenuService(cafeMenuRepository)
+    configureRouting(menuService)
 }
