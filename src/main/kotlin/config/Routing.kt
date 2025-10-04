@@ -8,9 +8,12 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.koin.ktor.ext.inject
 import java.time.LocalDateTime
 
-fun Application.configureRouting(menuService: MenuService) {
+fun Application.configureRouting() {
+    val menuService: MenuService by inject<MenuService>()
+
     routing {
         get("/") {
             call.respondText("Hello World!")
