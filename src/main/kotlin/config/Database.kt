@@ -36,10 +36,13 @@ private fun initData() {
     }
 }
 
-private fun connectDatabase() {
+private fun Application.connectDatabase() {
+    val jdbcUrl = environment.config.property("ktor.database.jdbcUrl").getString()
+    val dbDriver = environment.config.property("ktor.database.driver").getString()
+
     val config = HikariConfig().apply {
-        jdbcUrl = "jdbc:h2:mem:cafedb"
-        driverClassName = "org.h2.Driver"
+        this.jdbcUrl = jdbcUrl
+        this.driverClassName = dbDriver
         validate()
     }
 
@@ -49,7 +52,9 @@ private fun connectDatabase() {
 
 
 fun Application.configureH2() {
-    val h2Server = Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "9092")
+    val tcpPort = environment.config.property("ktor.database.tcpPort").getString()
+
+    val h2Server = Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", tcpPort)
 
     // ** deprecated after Ktor 3.x ** //
     // https://youtrack.jetbrains.com/issue/KTOR-7264?utm_source=chatgpt.com
