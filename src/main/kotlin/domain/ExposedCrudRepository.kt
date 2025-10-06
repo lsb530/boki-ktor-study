@@ -2,17 +2,11 @@ package com.boki.domain
 
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.dao.id.LongIdTable
-import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.StdOutSqlLogger
-import org.jetbrains.exposed.sql.addLogger
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insertAndGetId
-import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.statements.InsertStatement
 import org.jetbrains.exposed.sql.statements.UpdateStatement
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
 
 
 interface ExposedCrudRepository<TABLE : LongIdTable, DOMAIN : BaseModel> : CrudRepository<DOMAIN> {
@@ -55,7 +49,7 @@ interface ExposedCrudRepository<TABLE : LongIdTable, DOMAIN : BaseModel> : CrudR
     fun toDomain(row: ResultRow): DOMAIN
     fun updateRow(domain: DOMAIN): TABLE.(UpdateStatement) -> Unit
 
-    private fun <T> dbQuery(block: () -> T): T = transaction {
+    fun <T> dbQuery(block: () -> T): T = transaction {
         addLogger(StdOutSqlLogger)
         block()
     }
