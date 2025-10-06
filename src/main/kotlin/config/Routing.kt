@@ -1,9 +1,12 @@
 package com.boki.config
 
 import com.boki.domain.model.CafeMenu
+import com.boki.service.LoginService
 import com.boki.service.MenuService
 import com.boki.shared.CafeOrderStatus
 import com.boki.shared.dto.OrderDto
+import com.boki.shared.dto.UserDto
+import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -13,7 +16,8 @@ import org.koin.ktor.ext.inject
 import java.time.LocalDateTime
 
 fun Application.configureRouting() {
-    val menuService: MenuService by inject<MenuService>()
+    val menuService by inject<MenuService>()
+    val loginService by inject<LoginService>()
 
     routing {
         get("/") {
@@ -62,15 +66,20 @@ fun Application.configureRouting() {
             }
 
             post("/login") {
-
+                val user = call.receive< UserDto.LoginRequest>()
+                loginService.login(user, call.sessions)
+                call.respond(HttpStatusCode.OK)
             }
 
             post("/signup") {
-
+                val user = call.receive< UserDto.LoginRequest>()
+                loginService.signup(user, call.sessions)
+                call.respond(HttpStatusCode.OK)
             }
 
             post("/logout") {
-
+                loginService.logout(call.sessions)
+                call.respond(HttpStatusCode.OK)
             }
         }
     }
