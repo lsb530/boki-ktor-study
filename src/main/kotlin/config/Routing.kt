@@ -8,6 +8,7 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.sessions.*
 import org.koin.ktor.ext.inject
 import java.time.LocalDateTime
 
@@ -52,6 +53,24 @@ fun Application.configureRouting() {
                     id = 1,
                 )
                 call.respond(findOrder)
+            }
+
+            get("/me") {
+                val user = call.sessions.get<AuthenticatedUser>()
+                    ?: AuthenticatedUser.none()
+                call.respond(user)
+            }
+
+            post("/login") {
+
+            }
+
+            post("/signup") {
+
+            }
+
+            post("/logout") {
+
             }
         }
     }
