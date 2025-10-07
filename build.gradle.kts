@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.implementation
+
 val kotlin_version: String by project
 val logback_version: String by project
 val exposed_version: String by project
@@ -29,6 +31,7 @@ dependencies {
     implementation("io.ktor:ktor-server-netty")
     implementation("io.ktor:ktor-server-sessions")
     implementation("io.ktor:ktor-server-double-receive-jvm")
+    implementation("io.ktor:ktor-server-auth-jvm")
     implementation("ch.qos.logback:logback-classic:$logback_version")
 
     // Exposed
