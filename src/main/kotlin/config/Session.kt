@@ -23,5 +23,6 @@ data class AuthenticatedUser(
     companion object {
         fun none(): AuthenticatedUser = AuthenticatedUser(0, listOf())
         const val SESSION_NAME = "CU_SESSION_ID"
+        const val CUSTOMER_REQUIRED = "customer-required"
     }
 }

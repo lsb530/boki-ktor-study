@@ -5,6 +5,7 @@ import com.boki.config.configureDependencyInjection
 import com.boki.config.configureHttp
 import com.boki.config.configureLogging
 import com.boki.config.configureRouting
+import com.boki.config.configureSecurity
 import com.boki.config.configureSerialization
 import com.boki.config.configureSession
 import io.ktor.server.application.*
@@ -18,6 +19,7 @@ fun Application.module() {
     configureDependencyInjection()
     configureHttp()
     configureSession()
+    configureSecurity()
     configureSerialization()
     configureRouting()
     configureLogging()

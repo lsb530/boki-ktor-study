@@ -1,5 +1,6 @@
 package com.boki.config
 
+import com.boki.config.AuthenticatedUser.Companion.CUSTOMER_REQUIRED
 import com.boki.domain.model.CafeMenu
 import com.boki.service.LoginService
 import com.boki.service.MenuService
@@ -8,6 +9,7 @@ import com.boki.shared.dto.OrderDto
 import com.boki.shared.dto.UserDto
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.auth.authenticate
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -29,34 +31,35 @@ fun Application.configureRouting() {
                 val list: List<CafeMenu> = menuService.findAll()
                 call.respond(list)
             }
+            authenticate(CUSTOMER_REQUIRED) {
+                post("/orders") {
+                    val request = call.receive<OrderDto.CreateRequest>()
+                    val selectedMenu = menuService.getMenu(request.menuId)
+                    val newOrder = OrderDto.DisplayResponse(
+                        orderCode = "order-code1",
+                        menuName = selectedMenu.name,
+                        customerName = "홍길동",
+                        price = selectedMenu.price,
+                        status = CafeOrderStatus.READY,
+                        orderedAt = LocalDateTime.now(),
+                        id = 1,
+                    )
+                    call.respond(newOrder)
+                }
 
-            post("/orders") {
-                val request = call.receive<OrderDto.CreateRequest>()
-                val selectedMenu = menuService.getMenu(request.menuId)
-                val newOrder = OrderDto.DisplayResponse(
-                    orderCode = "order-code1",
-                    menuName = selectedMenu.name,
-                    customerName = "홍길동",
-                    price = selectedMenu.price,
-                    status = CafeOrderStatus.READY,
-                    orderedAt = LocalDateTime.now(),
-                    id = 1,
-                )
-                call.respond(newOrder)
-            }
-
-            get("/orders/{orderCode}") {
-                val orderCode = call.parameters["orderCode"]!!
-                val findOrder = OrderDto.DisplayResponse(
-                    orderCode = orderCode,
-                    menuName = "아이스라떼",
-                    customerName = "홍길동",
-                    price = 1000,
-                    status = CafeOrderStatus.READY,
-                    orderedAt = LocalDateTime.now(),
-                    id = 1,
-                )
-                call.respond(findOrder)
+                get("/orders/{orderCode}") {
+                    val orderCode = call.parameters["orderCode"]!!
+                    val findOrder = OrderDto.DisplayResponse(
+                        orderCode = orderCode,
+                        menuName = "아이스라떼",
+                        customerName = "홍길동",
+                        price = 1000,
+                        status = CafeOrderStatus.READY,
+                        orderedAt = LocalDateTime.now(),
+                        id = 1,
+                    )
+                    call.respond(findOrder)
+                }
             }
 
             get("/me") {
@@ -66,13 +69,13 @@ fun Application.configureRouting() {
             }
 
             post("/login") {
-                val user = call.receive< UserDto.LoginRequest>()
+                val user = call.receive<UserDto.LoginRequest>()
                 loginService.login(user, call.sessions)
                 call.respond(HttpStatusCode.OK)
             }
 
             post("/signup") {
-                val user = call.receive< UserDto.LoginRequest>()
+                val user = call.receive<UserDto.LoginRequest>()
                 loginService.signup(user, call.sessions)
                 call.respond(HttpStatusCode.OK)
             }
