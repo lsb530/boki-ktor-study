@@ -26,17 +26,20 @@ application {
 
 dependencies {
     implementation("io.ktor:ktor-server-core")
-    implementation("io.ktor:ktor-server-content-negotiation")
-    implementation("io.ktor:ktor-serialization-kotlinx-json")
-    implementation("io.ktor:ktor-server-netty")
-    implementation("io.ktor:ktor-server-sessions")
-    implementation("io.ktor:ktor-server-double-receive-jvm")
-    implementation("io.ktor:ktor-server-auth-jvm")
+    implementation("io.ktor:ktor-server-content-negotiation")   // Content Negotiation
+    implementation("io.ktor:ktor-serialization-kotlinx-json")   // Serialization
+    implementation("io.ktor:ktor-server-netty")                 // Netty Server
+    implementation("io.ktor:ktor-server-sessions")              // Session
+    implementation("io.ktor:ktor-server-double-receive-jvm")    // Parse Body multiple times
+    implementation("io.ktor:ktor-server-auth-jvm")              // Authentication
+    implementation("io.ktor:ktor-server-status-pages")          // Global Exception Handler
+
     implementation("ch.qos.logback:logback-classic:$logback_version")
 
     // Exposed
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
+
     // Exposed for Java Time
     implementation("org.jetbrains.exposed:exposed-java-time:$exposed_version")
 

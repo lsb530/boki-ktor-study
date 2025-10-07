@@ -2,6 +2,7 @@ package com.boki
 
 import com.boki.config.configureDatabase
 import com.boki.config.configureDependencyInjection
+import com.boki.config.configureErrorHandling
 import com.boki.config.configureHttp
 import com.boki.config.configureLogging
 import com.boki.config.configureRouting
@@ -22,5 +23,6 @@ fun Application.module() {
     configureSecurity()
     configureSerialization()
     configureRouting()
+    configureErrorHandling()
     configureLogging()
 }
