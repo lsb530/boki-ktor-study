@@ -10,6 +10,8 @@ import com.boki.shared.dto.UserDto
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.authenticate
+import io.ktor.server.http.content.react
+import io.ktor.server.http.content.singlePageApplication
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
@@ -22,10 +24,6 @@ fun Application.configureRouting() {
     val loginService by inject<LoginService>()
 
     routing {
-        get("/") {
-            call.respondText("Hello World!")
-        }
-
         route("/api") {
             get("/menus") {
                 val list: List<CafeMenu> = menuService.findAll()
@@ -44,7 +42,7 @@ fun Application.configureRouting() {
                         orderedAt = LocalDateTime.now(),
                         id = 1,
                     )
-                    call.respond(newOrder)
+                    call.respond(newOrder.orderCode)
                 }
 
                 get("/orders/{orderCode}") {
@@ -84,6 +82,10 @@ fun Application.configureRouting() {
                 loginService.logout(call.sessions)
                 call.respond(HttpStatusCode.OK)
             }
+        }
+
+        singlePageApplication {
+            react("frontend")
         }
     }
 }
