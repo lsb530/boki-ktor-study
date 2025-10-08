@@ -22,7 +22,10 @@ data class AuthenticatedUser(
     // null object pattern
     companion object {
         fun none(): AuthenticatedUser = AuthenticatedUser(0, listOf())
+
         const val SESSION_NAME = "CU_SESSION_ID"
+        const val USER_REQUIRED = "user-required"
         const val CUSTOMER_REQUIRED = "customer-required"
+        const val ADMINISTER_REQUIRED = "administer-required"
     }
 }
