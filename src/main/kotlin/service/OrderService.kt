@@ -72,8 +72,10 @@ class OrderService(
     }
 
     private fun checkOrderOwner(order: CafeOrder, authenticatedUser: AuthenticatedUser) {
-        if (order.cafeUserId != authenticatedUser.userId) {
-            throw CafeException(ErrorCode.FORBIDDEN)
+        if (authenticatedUser.isOnlyCustomer()) {
+            if (order.cafeUserId != authenticatedUser.userId) {
+                throw CafeException(ErrorCode.FORBIDDEN)
+            }
         }
     }
 

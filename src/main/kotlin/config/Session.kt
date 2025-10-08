@@ -19,6 +19,8 @@ data class AuthenticatedUser(
     val userId: Long,
     val userRoles: List<CafeUserRole>
 ) {
+    fun isOnlyCustomer(): Boolean = userRoles == listOf(CafeUserRole.CUSTOMER)
+
     // null object pattern
     companion object {
         fun none(): AuthenticatedUser = AuthenticatedUser(0, listOf())
