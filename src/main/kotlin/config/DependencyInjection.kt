@@ -8,6 +8,7 @@ import com.boki.domain.repository.CafeOrderRepository
 import com.boki.domain.repository.CafeUserRepository
 import com.boki.service.LoginService
 import com.boki.service.MenuService
+import com.boki.service.OrderService
 import com.boki.service.UserService
 import com.boki.shared.BCryptPasswordEncoder
 import io.ktor.server.application.*
@@ -24,6 +25,7 @@ val appModule = module {
     single { MenuService(get()) }
     single { UserService(get(), get()) }
     single { LoginService(get()) }
+    single { OrderService(get(), get(), get()) }
 }
 
 fun Application.configureDependencyInjection() {

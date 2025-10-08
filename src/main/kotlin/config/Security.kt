@@ -4,8 +4,10 @@ import com.boki.config.AuthenticatedUser.Companion.CUSTOMER_REQUIRED
 import com.boki.shared.CafeUserRole
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
+import io.ktor.server.application.ApplicationCall
 import io.ktor.server.application.install
 import io.ktor.server.auth.Authentication
+import io.ktor.server.auth.authentication
 import io.ktor.server.auth.session
 import io.ktor.server.response.respondText
 
@@ -24,3 +26,5 @@ fun Application.configureSecurity() {
         }
     }
 }
+
+fun ApplicationCall.authenticatedUser(): AuthenticatedUser = authentication.principal<AuthenticatedUser>()!!
