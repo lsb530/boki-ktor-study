@@ -39,19 +39,12 @@ class OrderService(
     ): OrderDto.DisplayResponse {
         val order = getOrderByCode(orderCode)
 
-        if (order.cafeUserId != authenticatedUser.userId) {
-            throw CafeException(ErrorCode.FORBIDDEN)
-        }
-
-        // 아래에 인증객체가 또 나오면 불필요한 의존관계가 됨
-        // val user = userService.getUser(authenticatedUser.userId)
-        val menu = menuService.getMenu(order.cafeMenuId)
-        val user = userService.getUser(order.cafeUserId)
+        checkOrderOwner(order, authenticatedUser)
 
         return OrderDto.DisplayResponse(
             orderCode = order.orderCode,
-            menuName = menu.name,
-            customerName = user.nickname,
+            menuName = menuService.getMenu(order.cafeMenuId).name,
+            customerName = userService.getUser(order.cafeUserId).nickname,
             price = order.price,
             status = order.status,
             orderedAt = order.orderedAt,
