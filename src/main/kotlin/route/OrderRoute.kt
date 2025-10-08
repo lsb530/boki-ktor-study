@@ -43,5 +43,9 @@ fun Route.orderRoute() {
             val orders: List<OrderDto.DisplayResponse> = orderService.getOrders()
             call.respond(orders)
         }
+        get("/orders/stats") {
+            val stats: List<OrderDto.StatsResponse> = orderService.getOrderStats()
+            call.respond(stats)
+        }
     }
 }

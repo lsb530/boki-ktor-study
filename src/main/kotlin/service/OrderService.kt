@@ -70,6 +70,19 @@ class OrderService(
         return cafeOrderRepository.findByOrders()
     }
 
+    fun getOrderStats(): List<OrderDto.StatsResponse> {
+        val orders: List<CafeOrder> = cafeOrderRepository.findAll()
+        return orders
+            .groupBy { it.orderedAt.toLocalDate() }
+            .map { (date, list) ->
+                OrderDto.StatsResponse(
+                    orderDate = date,
+                    totalOrderCount = list.count().toLong(),
+                    totalOrderPrice = list.sumOf { it.price }.toLong()
+                )
+            }.sortedByDescending { it.orderDate }
+    }
+
     private fun getOrderByCode(orderCode: String): CafeOrder {
         return cafeOrderRepository.findByCode(orderCode)
             ?: throw CafeException(ErrorCode.ORDER_NOT_FOUND)
