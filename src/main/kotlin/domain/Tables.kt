@@ -30,7 +30,7 @@ object CafeUserTable : LongIdTable(name = "cafe_user") {
 object CafeOrderTable : LongIdTable(name = "cafe_order") {
     val orderCode = varchar("order_code", length = 50)
     val cafeUserId = reference("cafe_user_id", CafeUserTable)
-    val cafeMenuId = reference("cafe_menu_id", CafeUserTable)
+    val cafeMenuId = reference("cafe_menu_id", CafeMenuTable)
     val price = integer("price")
     val status = enumerationByName<CafeOrderStatus>("status", length = 10)
     val orderedAt = datetime("ordered_at")
