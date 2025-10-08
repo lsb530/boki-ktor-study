@@ -3,7 +3,8 @@ package com.boki.config
 import com.boki.domain.CafeMenuTable
 import com.boki.domain.CafeOrderTable
 import com.boki.domain.CafeUserTable
-import com.boki.shared.dummyQueryList
+import com.boki.shared.dummyMenuQueryList
+import com.boki.shared.dummyUserQueryList
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.server.application.*
@@ -20,38 +21,7 @@ fun Application.configureDatabase() {
     initData()
 }
 
-private fun initData() {
-    transaction {
-        addLogger(StdOutSqlLogger)
-
-        SchemaUtils.create(
-            CafeMenuTable,
-            CafeUserTable,
-            CafeOrderTable,
-        )
-
-        execInBatch(
-            dummyQueryList
-        )
-    }
-}
-
-private fun Application.connectDatabase() {
-    val jdbcUrl = environment.config.property("ktor.database.jdbcUrl").getString()
-    val dbDriver = environment.config.property("ktor.database.driver").getString()
-
-    val config = HikariConfig().apply {
-        this.jdbcUrl = jdbcUrl
-        this.driverClassName = dbDriver
-        validate()
-    }
-
-    val dataSource = HikariDataSource(config)
-    Database.connect(dataSource)
-}
-
-
-fun Application.configureH2() {
+private fun Application.configureH2() {
     val tcpPort = environment.config.property("ktor.database.tcpPort").getString()
 
     val h2Server = Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", tcpPort)
@@ -78,5 +48,35 @@ fun Application.configureH2() {
     monitor.subscribe(ApplicationStopped) { app ->
         h2Server.stop()
         app.log.info("H2 server stopped. ${h2Server.url}")
+    }
+}
+
+private fun Application.connectDatabase() {
+    val jdbcUrl = environment.config.property("ktor.database.jdbcUrl").getString()
+    val dbDriver = environment.config.property("ktor.database.driver").getString()
+
+    val config = HikariConfig().apply {
+        this.jdbcUrl = jdbcUrl
+        this.driverClassName = dbDriver
+        validate()
+    }
+
+    val dataSource = HikariDataSource(config)
+    Database.connect(dataSource)
+}
+
+
+private fun initData() {
+    transaction {
+        addLogger(StdOutSqlLogger)
+
+        SchemaUtils.create(
+            CafeMenuTable,
+            CafeUserTable,
+            CafeOrderTable,
+        )
+
+        execInBatch(dummyUserQueryList)
+        execInBatch(dummyMenuQueryList)
     }
 }
