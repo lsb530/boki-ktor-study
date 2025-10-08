@@ -66,6 +66,10 @@ class OrderService(
         cafeOrderRepository.update(order)
     }
 
+    fun getOrders(): List<OrderDto.DisplayResponse> {
+        return cafeOrderRepository.findByOrders()
+    }
+
     private fun getOrderByCode(orderCode: String): CafeOrder {
         return cafeOrderRepository.findByCode(orderCode)
             ?: throw CafeException(ErrorCode.ORDER_NOT_FOUND)

@@ -1,5 +1,6 @@
 package com.boki.route
 
+import com.boki.config.AuthenticatedUser
 import com.boki.config.AuthenticatedUser.Companion.CUSTOMER_REQUIRED
 import com.boki.config.AuthenticatedUser.Companion.USER_REQUIRED
 import com.boki.config.authenticatedUser
@@ -28,11 +29,19 @@ fun Route.orderRoute() {
             call.respond(HttpStatusCode.OK)
         }
     }
+
     authenticate(USER_REQUIRED) {
         get("/orders/{orderCode}") {
             val orderCode = call.parameters["orderCode"]!!
             val order: OrderDto.DisplayResponse = orderService.getOrder(orderCode, call.authenticatedUser())
             call.respond<OrderDto.DisplayResponse>(order)
+        }
+    }
+
+    authenticate(AuthenticatedUser.ADMINISTER_REQUIRED) {
+        get("/orders") {
+            val orders: List<OrderDto.DisplayResponse> = orderService.getOrders()
+            call.respond(orders)
         }
     }
 }

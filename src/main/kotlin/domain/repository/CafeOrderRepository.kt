@@ -1,8 +1,12 @@
 package com.boki.domain.repository
 
+import com.boki.domain.CafeMenuTable
 import com.boki.domain.CafeOrderTable
+import com.boki.domain.CafeUserTable
 import com.boki.domain.ExposedCrudRepository
 import com.boki.domain.model.CafeOrder
+import com.boki.shared.dto.OrderDto
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.selectAll
@@ -51,5 +55,45 @@ class CafeOrderRepository(
             .where { table.orderCode.eq(orderCode) }
             .map(::toDomain)
             .firstOrNull()
+    }
+
+    /**
+     * select o.order_code,
+     *        o.price,
+     *        o.status,
+     *        o.ordered_at,
+     *        m.menu_name,
+     *        u.nickname
+     * from cafe_order o
+     *          inner join cafe_user u on u.id = o.cafe_user_id
+     *          inner join cafe_menu m on m.id = o.cafe_menu_id
+     * order by o.id desc;
+     */
+    fun findByOrders(): List<OrderDto.DisplayResponse> = dbQuery {
+        val query = table
+            .innerJoin(CafeUserTable)
+            .innerJoin(CafeMenuTable)
+            .select(
+                CafeOrderTable.orderCode,
+                CafeOrderTable.price,
+                CafeOrderTable.status,
+                CafeOrderTable.orderedAt,
+                CafeOrderTable.id,
+                CafeMenuTable.name,
+                CafeUserTable.nickname,
+            )
+            .orderBy(CafeOrderTable.id to SortOrder.DESC)
+
+        query.map {
+            OrderDto.DisplayResponse(
+                orderCode = it[table.orderCode],
+                menuName = it[CafeMenuTable.name],
+                customerName = it[CafeUserTable.nickname],
+                price = it[table.price],
+                status = it[table.status],
+                orderedAt = it[table.orderedAt],
+                id = it[table.id].value
+            )
+        }
     }
 }
