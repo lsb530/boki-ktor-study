@@ -71,6 +71,10 @@ class OrderService(
     }
 
     fun getOrderStats(): List<OrderDto.StatsResponse> {
+        // SQL
+        return cafeOrderRepository.findOrderStats()
+        /*
+        // Kotlin Code
         val orders: List<CafeOrder> = cafeOrderRepository.findAll()
         return orders
             .groupBy { it.orderedAt.toLocalDate() }
@@ -81,6 +85,7 @@ class OrderService(
                     totalOrderPrice = list.sumOf { it.price }.toLong()
                 )
             }.sortedByDescending { it.orderDate }
+        */
     }
 
     private fun getOrderByCode(orderCode: String): CafeOrder {
