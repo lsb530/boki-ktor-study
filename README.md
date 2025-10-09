@@ -62,5 +62,5 @@ If the server starts successfully, you'll see the following output:
   ./gradlew buildFatJar
 ```
 ```bash
-    java -jar build/libs/boki-ktor-study-all.jar -config=application-prod.conf
+  java -jar build/libs/boki-ktor-study-all.jar -config=application-prod.conf
 ```
