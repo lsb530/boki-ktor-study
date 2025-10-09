@@ -9,6 +9,7 @@ import com.boki.config.configureRouting
 import com.boki.config.configureSecurity
 import com.boki.config.configureSerialization
 import com.boki.config.configureSession
+import com.boki.shared.applicationEnv
 import io.ktor.server.application.*
 
 fun main(args: Array<String>) {
@@ -16,6 +17,8 @@ fun main(args: Array<String>) {
 }
 
 fun Application.module() {
+    this.log.info("current env: ${applicationEnv()}")
+
     configureDatabase()
     configureDependencyInjection()
     configureHttp()

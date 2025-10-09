@@ -7,32 +7,29 @@ import com.boki.domain.model.CafeOrder
 import com.boki.shared.CafeOrderStatus
 import com.boki.shared.dummyMenuQueryList
 import com.boki.shared.dummyUserQueryList
+import com.boki.shared.getPropertyBoolean
+import com.boki.shared.getPropertyString
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.server.application.*
 import org.h2.tools.Server
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.StdOutSqlLogger
-import org.jetbrains.exposed.sql.addLogger
-import org.jetbrains.exposed.sql.batchInsert
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.LocalDateTime
-import java.util.UUID
+import java.util.*
 import kotlin.random.Random
 
 fun Application.configureDatabase() {
     configureH2()
     connectDatabase()
-    initData()
+
+    if (getPropertyBoolean("db.initData", false)) {
+        initData()
+    }
 }
 
 private fun Application.configureH2() {
-    val tcpPort = environment.config.property("ktor.database.tcpPort").getString()
-
-    val h2Server = Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", tcpPort)
+    val h2Server = Server.createTcpServer("-tcp", "-tcpAllowOthers", "-tcpPort", "9092")
 
     // ** deprecated after Ktor 3.x ** //
     // https://youtrack.jetbrains.com/issue/KTOR-7264?utm_source=chatgpt.com
@@ -60,12 +57,9 @@ private fun Application.configureH2() {
 }
 
 private fun Application.connectDatabase() {
-    val jdbcUrl = environment.config.property("ktor.database.jdbcUrl").getString()
-    val dbDriver = environment.config.property("ktor.database.driver").getString()
-
     val config = HikariConfig().apply {
-        this.jdbcUrl = jdbcUrl
-        this.driverClassName = dbDriver
+        this.jdbcUrl = getPropertyString("db.jdbcUrl")
+        this.driverClassName = getPropertyString("db.driverClassName")
         validate()
     }
 
