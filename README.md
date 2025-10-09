@@ -42,3 +42,25 @@ If the server starts successfully, you'll see the following output:
 2024-12-04 14:32:45.682 [main] INFO  Application - Responding at http://0.0.0.0:8080
 ```
 
+## Run with profiles
+* Dev(local)
+```bash
+  ./gradlew clean
+```
+```bash
+  ./gradlew buildFatJar
+```
+```bash
+  java -jar build/libs/boki-ktor-study-all.jar -config=application-local.conf
+```
+
+* Prod
+```bash
+  ./gradlew clean
+```
+```bash
+  ./gradlew buildFatJar
+```
+```bash
+    java -jar build/libs/boki-ktor-study-all.jar -config=application-prod.conf
+```
