@@ -15,8 +15,18 @@ fun Application.configureRouting() {
             orderRoute()
         }
 
+        // 1번 방식 - 여기에 더 적당함
         singlePageApplication {
+            useResources = true
             react("frontend")
         }
+
+        // 2번 방식
+        /*
+        staticResources("/", "frontend") {
+            default("index.html")
+            preCompressed(CompressedFileType.GZIP)
+        }
+        */
     }
 }
